@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ProseMirror with Bold Button</title>
+  <style>
+    .editor {
+      border: 1px solid #ccc;
+      padding: 10px;
+      min-height: 300px;
+    }
+    .toolbar {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="toolbar">
+  <button id="bold">Bold</button>
+</div>
+<div id="editor" class="editor"></div>
+
+<script src="https://unpkg.com/prosemirror-model@latest/dist/index.js"></script>
+<script src="https://unpkg.com/prosemirror-state@latest/dist/index.js"></script>
+<script src="https://unpkg.com/prosemirror-view@latest/dist/index.js"></script>
+<script>
+  window.onload = function() {
+    // 定义节点类型
+    const schema = new ProseMirrorSchema({
+      nodes: {
+        doc: { content: "block+" },
+        paragraph: { group: "block", content: "inline*" },
+        text: { group: "inline" }
+      },
+      marks: {
+        strong: {}
+      }
+    });
+
+    // 创建初始状态
+    const state = EditorState.create({
+      doc: schema.nodes.doc.create({}, [
+        schema.nodes.paragraph.create({}, [schema.text.create("Hello, world!")])
+      ]),
+      schema
+    });
+
+    // 创建视图
+    const view = new EditorView(document.querySelector("#editor"), { state });
+
+    // 添加加粗按钮的功能
+    document.getElementById("bold").addEventListener("click", () => {
+      const { tr } = view.state;
+      const mark = schema.marks.strong.create();
+      const newState = view.state.apply(tr.addMark(tr.selection.from, tr.selection.to, mark));
+      view.updateState(newState);
+    });
+  }
+</script>
+</body>
+</html>

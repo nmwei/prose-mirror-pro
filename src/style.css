@@ -1,0 +1,10 @@
+#editor {
+  border: 1px solid #646cffaa;
+  min-height: 300px;
+  padding: 10px;
+}
+
+#editor .ProseMirror {
+  outline: none;
+  caret-color: #646cffaa;
+}
