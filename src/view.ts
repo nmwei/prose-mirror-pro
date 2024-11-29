@@ -1,7 +1,7 @@
 // view.ts
 import { EditorView } from 'prosemirror-view'
 import { EditorState } from 'prosemirror-state'
-import { Schema } from 'prosemirror-model';
+import { schema } from './schema';
 
 import { keymap } from 'prosemirror-keymap'
 // baseKeymap 定义了对于很多基础按键按下后的功能，例如回车换行，删除键等。
@@ -9,51 +9,6 @@ import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
 
-
-const schema = new Schema({
-    nodes: {
-        doc: { content: "block+" },
-        paragraph: {
-            group: "block",
-            content: "inline*",
-            toDOM: () => ["p", 0],
-            parseDOM: [{
-                tag: "p"
-            }]
-        },
-        text: { group: "inline", toDOM: () => ["span", 0] },
-        heading: {
-            attrs: {
-                level: { default: 1 }
-            },
-            content: "inline*", //可以包含零个或多个内联节点
-            group: "block", //是一个块级节点
-            defining: true,
-            toDOM(node) {
-                //是根据 node.attrs.level 动态生成的标签名，例如 h1、h2
-                const tag = `h${node.attrs.level}`
-                return [tag, 0]
-            },
-            parseDOM: [
-                //如果遇到 <h1> 标签，则解析为 heading 节点，并设置 level 为 1
-                {tag: "h1", attrs: { level: 1 }},
-                {tag: "h2", attrs: { level: 2 }},
-                {tag: "h3", attrs: { level: 3 }},
-                {tag: "h4", attrs: { level: 4 }},
-                {tag: "h5", attrs: { level: 5 }},
-                {tag: "h6", attrs: { level: 6 }},
-            ]
-        }
-    },
-    marks: {
-        strong: {
-            toDOM: () => ["strong", 0],
-            parseDOM: [
-                { tag: 'strong' },
-            ]
-        }
-    }
-})
 
 const state = EditorState.create({
     doc: schema.nodes.doc.create({}, [
@@ -73,6 +28,8 @@ const state = EditorState.create({
 const editorView = new EditorView(document.querySelector("#editor"), {
     state
 })
+
+window.editorView = editorView;
 
 // 添加加粗按钮的功能
 document.querySelector<HTMLDivElement>("#bold")!.addEventListener("click", () => {
