@@ -23,9 +23,16 @@ const state = EditorState.create({
 })
 
 const editorView = new EditorView(document.querySelector("#editor"), {
-    state
+    state,
+    dispatchTransaction(tr) {
+        const newState = editorView.state.apply(tr);
+        editorView.updateState(newState);
+        toolbar.update(editorView, editorView.state);
+        console.log(newState);
+    }
 })
 
+// @ts-ignore
 window.editorView = editorView;
 
 const toolbar = new Toolbar(editorView, {
