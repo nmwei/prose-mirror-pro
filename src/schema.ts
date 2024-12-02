@@ -50,7 +50,7 @@ export const schema = new Schema({
                 {tag: "h6", attrs: { level: 6 }},
             ]
         },
-        text: { group: "inline", toDOM: () => ["span", 0] }
+        text: { group: "inline" }
     },
     marks: {
         strong: {
