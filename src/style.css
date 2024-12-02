@@ -8,3 +8,27 @@
   outline: none;
   caret-color: #646cffaa;
 }
+
+.ProseMirror .block_tile {
+  padding-left: 20px;
+  position: relative;
+}
+
+.ProseMirror blockquote {
+  margin: 16px 0;
+  position: relative;
+  padding-left: 16px;
+  color: #767c85;
+}
+
+.ProseMirror blockquote::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: inline-block;
+  width: 4px;
+  border-radius: 2px;
+  background-color: #e2e6ed;
+}

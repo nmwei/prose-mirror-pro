@@ -32,3 +32,25 @@ export function insertHeading(editorView: EditorView, content: string, level = 1
     const tr = state.tr.replaceSelectionWith(block_title);
     dispatch(tr);
 }
+
+export function injectBlockquote(editorView: EditorView, value = "") {
+    const { state, dispatch } = editorView;
+    const schema = state.schema as Schema;
+    //通过 state.doc.toJSON 可以将node数据转json
+    //通过 schema.nodeFromJSON 可以反向生成对应的node
+    const jsonContent = {
+        type: 'blockquote',
+        content: [
+            {
+                type: 'paragraph',
+                content: value
+                    ? [{ type: 'text', text: value }]
+                    : []
+            }
+        ]
+    }
+
+    const node = schema.nodeFromJSON(jsonContent);
+    const tr = state.tr.replaceWith(state.selection.from, state.selection.to, node)
+    dispatch(tr);
+}

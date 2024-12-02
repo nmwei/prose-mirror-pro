@@ -8,7 +8,7 @@ import { keymap } from 'prosemirror-keymap'
 import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
-import { insertParagraph, insertHeading } from './utils'
+import { insertParagraph, insertHeading, injectBlockquote } from './utils'
 
 
 const state = EditorState.create({
@@ -38,6 +38,11 @@ document.querySelector<HTMLDivElement>("#insertParagraph")!.addEventListener("cl
 //添加新一级标题
 document.querySelector<HTMLDivElement>("#insertHeading")!.addEventListener("click", () => {
     insertHeading(editorView, "新一级标题");
+});
+
+//添加injectBlockquote
+document.querySelector<HTMLDivElement>("#injectBlockquote")!.addEventListener("click", () => {
+    injectBlockquote(editorView, "blockquote引用块");
 });
 
 

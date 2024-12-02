@@ -22,6 +22,20 @@ export const schema = new Schema({
                 { tag: 'div.block_title' },
             ]
         },
+        blockquote: {
+            content: 'paragraph+',
+            group: 'block',
+            defining: true,
+            //isolating: true,
+            draggable: true,
+            selectable: true,
+            toDOM() {
+                return ['blockquote', 0]
+            },
+            parseDOM: [
+                { tag: 'blockquote' }
+            ]
+        },
         paragraph: {
             group: "block",
             content: "inline*",
@@ -34,7 +48,7 @@ export const schema = new Schema({
             },
             content: "inline*", //可以包含零个或多个内联节点
             group: "block", //是一个块级节点
-            defining: true,
+            defining: true, //复制一个标题后，全选段落内容或者在一个空段落中粘贴，粘贴整个标题块
             toDOM(node) {
                 //是根据 node.attrs.level 动态生成的标签名，例如 h1、h2
                 const tag = `h${node.attrs.level}`
