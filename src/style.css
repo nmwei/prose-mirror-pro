@@ -9,6 +9,24 @@
   caret-color: #646cffaa;
 }
 
+.toolbar {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #646cffaa;
+  padding-bottom: 12px;
+}
+
+.menu-group {
+  margin-bottom: 8px;
+}
+
+.menu-group .menu-item:not(:last-of-type) {
+  margin-right: 8px;
+}
+.menu-group .menu-item.is-active {
+  background-color: #646cffaa;
+  color: #fff;
+}
+
 .ProseMirror .block_tile {
   padding-left: 20px;
   position: relative;

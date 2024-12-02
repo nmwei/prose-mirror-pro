@@ -2,14 +2,13 @@
 import { EditorView } from 'prosemirror-view'
 import { EditorState } from 'prosemirror-state'
 import { schema } from './schema';
-
 import { keymap } from 'prosemirror-keymap'
 // baseKeymap 定义了对于很多基础按键按下后的功能，例如回车换行，删除键等。
 import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
-import { insertParagraph, insertHeading, injectBlockquote, insertDatetime } from './utils'
-
+import { insertParagraph, insertHeading, insertBlockquote, insertDatetime } from './utils'
+import { Toolbar } from './menu/toolbar'
 
 const state = EditorState.create({
     schema,
@@ -27,28 +26,42 @@ const editorView = new EditorView(document.querySelector("#editor"), {
     state
 })
 
-
 window.editorView = editorView;
 
-//添加新段落
-document.querySelector<HTMLDivElement>("#insertParagraph")!.addEventListener("click", () => {
-    insertParagraph(editorView, "新段落")
-});
-
-//添加新一级标题
-document.querySelector<HTMLDivElement>("#insertHeading")!.addEventListener("click", () => {
-    insertHeading(editorView, "新一级标题");
-});
-
-//添加块级引用元素
-document.querySelector<HTMLDivElement>("#injectBlockquote")!.addEventListener("click", () => {
-    injectBlockquote(editorView, "blockquote引用块");
-});
-
-//添加时间选择器
-document.querySelector<HTMLDivElement>("#insertDatetime")!.addEventListener("click", () => {
-    insertDatetime(editorView, new Date().getTime());
-});
+const toolbar = new Toolbar(editorView, {
+    groups: [
+        {
+            name: '段落',
+            menus: [
+                {
+                    label: '添加段落',
+                    handler: (props) => {
+                        const { view } = props;
+                        insertParagraph(view, '新段落')
+                    },
+                },
+                {
+                    label: '添加一级标题',
+                    handler: (props) => {
+                        insertHeading(props.view, '新一级标题')
+                    },
+                },
+                {
+                    label: '添加 blockquote',
+                    handler: (props) => {
+                        insertBlockquote(props.view)
+                    },
+                },
+                {
+                    label: '添加 datetime',
+                    handler: (props) => {
+                        insertDatetime(props.view, Date.now())
+                    },
+                }
+            ]
+        }
+    ]
+})
 
 
 

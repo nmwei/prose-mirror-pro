@@ -33,7 +33,7 @@ export function insertHeading(editorView: EditorView, content: string, level = 1
     dispatch(tr);
 }
 
-export function injectBlockquote(editorView: EditorView, value = "") {
+export function insertBlockquote(editorView: EditorView, value = "") {
     const { state, dispatch } = editorView;
     const schema = state.schema as Schema;
     //通过 state.doc.toJSON 可以将node数据转json
