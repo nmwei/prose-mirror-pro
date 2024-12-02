@@ -17,15 +17,16 @@ export const schema = new Schema({
                     dom: blockTile,
                     contentDOM: blockTile
                 }
-            }
+            },
+            parseDOM: [
+                { tag: 'div.block_title' },
+            ]
         },
         paragraph: {
             group: "block",
             content: "inline*",
             toDOM: () => ["p", 0],
-            parseDOM: [{
-                tag: "p"
-            }]
+            parseDOM: [{ tag: "p" }]
         },
         heading: {
             attrs: {

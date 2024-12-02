@@ -8,6 +8,7 @@ import { keymap } from 'prosemirror-keymap'
 import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
+import { insertParagraph, insertHeading } from './utils'
 
 
 const state = EditorState.create({
@@ -26,14 +27,17 @@ const editorView = new EditorView(document.querySelector("#editor"), {
     state
 })
 
+
 window.editorView = editorView;
 
-// 添加加粗按钮的功能
-document.querySelector<HTMLDivElement>("#bold")!.addEventListener("click", () => {
-    const { tr } = editorView.state;
-    const mark = schema.marks.strong.create();
-    const newState = editorView.state.apply(tr.addMark(tr.selection.from, tr.selection.to, mark));
-    editorView.updateState(newState);
+//添加新段落
+document.querySelector<HTMLDivElement>("#insertParagraph")!.addEventListener("click", () => {
+    insertParagraph(editorView, "新段落")
+});
+
+//添加新一级标题
+document.querySelector<HTMLDivElement>("#insertHeading")!.addEventListener("click", () => {
+    insertHeading(editorView, "新一级标题");
 });
 
 
