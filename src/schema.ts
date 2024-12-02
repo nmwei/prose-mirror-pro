@@ -64,6 +64,61 @@ export const schema = new Schema({
                 {tag: "h6", attrs: { level: 6 }},
             ]
         },
+        datetime: {
+            group: 'inline',
+            inline: true,
+            atom: true,
+            attrs: {
+                timestamp: {
+                    default: null
+                }
+            },
+            toDOM(node) {
+                // 自定义 dom 结构
+                const dom = document.createElement('span');
+                dom.classList.add('datetime')
+                dom.dataset.timestamp = node.attrs.timestamp;
+                console.log('node.attrs',node.attrs)
+
+                let time = '';
+                if (node.attrs.timestamp) {
+                    const date = new Date(node.attrs.timestamp)
+                    time = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+                }
+
+                const label = document.createElement('label');
+                label.innerText = '请选择时间';
+
+                const input = document.createElement('input');
+                input.type="date";
+                input.value = time;
+
+                input.addEventListener('input', (event) => {
+                    dom.dataset.timestamp = new Date((event.target as HTMLInputElement).value).getTime().toString()
+                })
+
+                dom.appendChild(label)
+                dom.appendChild(input)
+                // 返回 dom
+                return dom;
+            },
+            parseDOM: [
+                {
+                    tag: 'span.datetime',
+                    getAttrs(htmlNode) {
+                        if (typeof htmlNode !== 'string') {
+                            const timestamp = htmlNode.dataset.timestamp;
+                            return {
+                                timestamp: timestamp ? Number(timestamp) : null
+                            }
+                        };
+                        return {
+                            timestamp: null
+                        }
+                    }
+                }
+            ]
+        },
         text: { group: "inline" }
     },
     marks: {
