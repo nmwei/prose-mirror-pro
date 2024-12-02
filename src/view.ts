@@ -28,7 +28,6 @@ const editorView = new EditorView(document.querySelector("#editor"), {
         const newState = editorView.state.apply(tr);
         editorView.updateState(newState);
         toolbar.update(editorView, editorView.state);
-        console.log(newState);
     }
 })
 
@@ -44,19 +43,19 @@ const toolbar = new Toolbar(editorView, {
                     label: '添加段落',
                     handler: (props) => {
                         const { view } = props;
-                        insertParagraph(view, '新段落')
+                        insertParagraph(view, '这是段落')
                     },
                 },
                 {
                     label: '添加一级标题',
                     handler: (props) => {
-                        insertHeading(props.view, '新一级标题')
+                        insertHeading(props.view, '这是标题')
                     },
                 },
                 {
                     label: '添加 blockquote',
                     handler: (props) => {
-                        insertBlockquote(props.view)
+                        insertBlockquote(props.view, '这是引用')
                     },
                 },
                 {
