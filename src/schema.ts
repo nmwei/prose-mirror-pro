@@ -122,11 +122,39 @@ export const schema = new Schema({
         text: { group: "inline" }
     },
     marks: {
-        strong: {
+        bold: {
             toDOM: () => ["strong", 0],
             parseDOM: [
                 { tag: 'strong' }, //从别的地方复制过来的富文本，如果有 strong 标签，则被解析为一个 strong mark
+                { tag: 'b', getAttrs: (domNode) => (domNode as HTMLElement).style.fontWeight !== 'normal' && null },
+                { style: 'font-weight', getAttrs: (value) => /^(bold(er)?|[5-9]\d{2})$/.test(value as string) && null }
             ]
-        }
+        },
+        italic: {
+            group: 'heading',
+            toDOM: () => {
+                return ['em', 0]
+            },
+            parseDOM: [
+                { tag: 'em' },
+                { tag: 'i', getAttrs: (domNode) => (domNode as HTMLElement).style.fontStyle !== 'normal' && null},
+                { style: 'font-style=italic' },
+            ]
+        },
+        link: {
+            group: 'heading',
+            attrs: {
+                href: { default: null },
+                ref: { default: 'noopener noreferrer nofollow' },
+                target: { default: '_blank' },
+            },
+            toDOM: (mark) => {
+                const { href, ref, target } = mark.attrs;
+                return ['a', { href, ref, target  }, 0]
+            },
+            parseDOM: [
+                { tag: 'a[href]:not([href *= "javascript:" i])' }
+            ]
+        },
     }
 })
