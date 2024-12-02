@@ -11,9 +11,6 @@ import { history, undo, redo } from 'prosemirror-history'
 
 
 const state = EditorState.create({
-    doc: schema.nodes.doc.create({}, [
-        schema.nodes.paragraph.create({}, [schema.text("Hello, world!")])
-    ]),
     schema,
     plugins: [
         // 将基础按键绑定到对应的功能上，例如回车换行，删除键等。

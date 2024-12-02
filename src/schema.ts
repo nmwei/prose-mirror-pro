@@ -3,7 +3,13 @@ import { Schema } from "prosemirror-model"
 export const schema = new Schema({
     nodes: {
         doc: {
-            content: "block+"
+            content: "block_title+"
+        },
+        block_title: {
+            content: "block",
+            group: "title",
+            inline: false,
+            toDOM: () => ["div", 0]
         },
         paragraph: {
             group: "block",
