@@ -9,7 +9,7 @@ import {baseKeymap, toggleMark} from 'prosemirror-commands'
 import { history, undo, redo } from 'prosemirror-history'
 import { insertParagraph, insertHeading, insertBlockquote, insertDatetime } from './utils'
 import { Toolbar } from './menu/toolbar'
-import {isMarkActive, setBold, toggleBold, unsetBold} from "./setMark";
+import {canSetMark, isMarkActive, setBold, toggleBold, unsetBold} from "./setMark";
 
 const state = EditorState.create({
     schema,
@@ -76,12 +76,21 @@ const toolbar = new Toolbar(editorView, {
                         props.view.focus();
                     },
                     update(view, state, menDom) {
-                        const isActive = isMarkActive(view, 'bold')
-                        if(isActive && !menDom.classList.contains("is-active")) {
-                            menDom.classList.add('is-active')
-                        }
-                        if(!isActive && menDom.classList.contains('is-active')) {
-                            menDom.classList.remove('is-active')
+                        const disabled = !canSetMark(view, 'bold');
+                        if(disabled) {
+                            !menDom.getAttribute('disabled')
+                            && menDom.setAttribute('disabled', 'true')
+                        } else {
+                            menDom.getAttribute('disabled')
+                            && menDom.removeAttribute('disabled')
+
+                            const isActive = isMarkActive(view, 'bold')
+                            if(isActive && !menDom.classList.contains("is-active")) {
+                                menDom.classList.add('is-active')
+                            }
+                            if(!isActive && menDom.classList.contains('is-active')) {
+                                menDom.classList.remove('is-active')
+                            }
                         }
                     }
                 },

@@ -43,6 +43,7 @@ export const schema = new Schema({
             parseDOM: [{ tag: "p" }]
         },
         heading: {
+            marks: "",
             attrs: {
                 level: { default: 1 }
             },
