@@ -4,12 +4,12 @@ import { EditorState } from 'prosemirror-state'
 import { schema } from './schema';
 import { keymap } from 'prosemirror-keymap'
 // baseKeymap 定义了对于很多基础按键按下后的功能，例如回车换行，删除键等。
-import { baseKeymap } from 'prosemirror-commands'
+import {baseKeymap, toggleMark} from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
 import { insertParagraph, insertHeading, insertBlockquote, insertDatetime } from './utils'
 import { Toolbar } from './menu/toolbar'
-import {setBold, unsetBold} from "./setMark";
+import {isMarkActive, setBold, toggleBold, unsetBold} from "./setMark";
 
 const state = EditorState.create({
     schema,
@@ -70,19 +70,21 @@ const toolbar = new Toolbar(editorView, {
             name: '格式',
             menus: [
                 {
-                    label: '加粗',
+                    label: 'B',
                     handler(props) {
-                        setBold(props.view);
+                        toggleBold(props.view);
                         props.view.focus();
+                    },
+                    update(view, state, menDom) {
+                        const isActive = isMarkActive(view, 'bold')
+                        if(isActive && !menDom.classList.contains("is-active")) {
+                            menDom.classList.add('is-active')
+                        }
+                        if(!isActive && menDom.classList.contains('is-active')) {
+                            menDom.classList.remove('is-active')
+                        }
                     }
                 },
-                {
-                    label: '取消加粗',
-                    handler(props) {
-                        unsetBold(props.view);
-                        props.view.focus();
-                    }
-                }
             ]
         }
     ]
