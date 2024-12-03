@@ -9,6 +9,7 @@ import { baseKeymap } from 'prosemirror-commands'
 import { history, undo, redo } from 'prosemirror-history'
 import { insertParagraph, insertHeading, insertBlockquote, insertDatetime } from './utils'
 import { Toolbar } from './menu/toolbar'
+import {setBold, unsetBold} from "./setMark";
 
 const state = EditorState.create({
     schema,
@@ -42,8 +43,7 @@ const toolbar = new Toolbar(editorView, {
                 {
                     label: '添加段落',
                     handler: (props) => {
-                        const { view } = props;
-                        insertParagraph(view, '这是段落')
+                        insertParagraph(props.view, '这是段落')
                     },
                 },
                 {
@@ -63,6 +63,25 @@ const toolbar = new Toolbar(editorView, {
                     handler: (props) => {
                         insertDatetime(props.view, Date.now())
                     },
+                }
+            ]
+        },
+        {
+            name: '格式',
+            menus: [
+                {
+                    label: '加粗',
+                    handler(props) {
+                        setBold(props.view);
+                        props.view.focus();
+                    }
+                },
+                {
+                    label: '取消加粗',
+                    handler(props) {
+                        unsetBold(props.view);
+                        props.view.focus();
+                    }
                 }
             ]
         }
