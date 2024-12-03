@@ -4,12 +4,12 @@ import { EditorState } from 'prosemirror-state'
 import { schema } from './schema';
 import { keymap } from 'prosemirror-keymap'
 // baseKeymap 定义了对于很多基础按键按下后的功能，例如回车换行，删除键等。
-import {baseKeymap, toggleMark} from 'prosemirror-commands'
+import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
 import { insertParagraph, insertHeading, insertBlockquote, insertDatetime } from './utils'
 import { Toolbar } from './menu/toolbar'
-import {canSetMark, isMarkActive, setBold, toggleBold, unsetBold} from "./setMark";
+import {canSetMark, isMarkActive, toggleMark} from "./setMark";
 
 const state = EditorState.create({
     schema,
@@ -31,6 +31,30 @@ const editorView = new EditorView(document.querySelector("#editor"), {
         toolbar.update(editorView, editorView.state);
     }
 })
+
+function handleUpdateMenu(view: EditorView, type: string, menDom: HTMLElement) {
+    const disabled = !canSetMark(view, type);
+    if(disabled) {
+        !menDom.getAttribute('disabled')
+        && menDom.setAttribute('disabled', 'true')
+    } else {
+        menDom.getAttribute('disabled')
+        && menDom.removeAttribute('disabled')
+
+        const isActive = isMarkActive(view, type)
+        if(isActive && !menDom.classList.contains("is-active")) {
+            menDom.classList.add('is-active')
+        }
+        if(!isActive && menDom.classList.contains('is-active')) {
+            menDom.classList.remove('is-active')
+        }
+    }
+}
+
+function handleSetMark(view: EditorView, type: string) {
+    toggleMark(view, type);
+    view.focus();
+}
 
 // @ts-ignore
 window.editorView = editorView;
@@ -72,28 +96,66 @@ const toolbar = new Toolbar(editorView, {
                 {
                     label: 'B',
                     handler(props) {
-                        toggleBold(props.view);
-                        props.view.focus();
+                       handleSetMark(props.view, 'bold')
                     },
-                    update(view, state, menDom) {
-                        const disabled = !canSetMark(view, 'bold');
-                        if(disabled) {
-                            !menDom.getAttribute('disabled')
-                            && menDom.setAttribute('disabled', 'true')
-                        } else {
-                            menDom.getAttribute('disabled')
-                            && menDom.removeAttribute('disabled')
-
-                            const isActive = isMarkActive(view, 'bold')
-                            if(isActive && !menDom.classList.contains("is-active")) {
-                                menDom.classList.add('is-active')
-                            }
-                            if(!isActive && menDom.classList.contains('is-active')) {
-                                menDom.classList.remove('is-active')
-                            }
-                        }
+                    update(view, _, menDom) {
+                        handleUpdateMenu(view, 'bold', menDom)
                     }
                 },
+                {
+                    label: 'I',
+                    handler(props) {
+                        handleSetMark(props.view, 'italic')
+                    },
+                    update(view, _, menuDom) {
+                        handleUpdateMenu(view, 'italic', menuDom)
+                    }
+                },
+                {
+                    label: 'S',
+                    handler(props) {
+                        handleSetMark(props.view, 'strike')
+                    },
+                    update(view, _, menuDom) {
+                        handleUpdateMenu(view, 'strike', menuDom)
+                    }
+                },
+                {
+                    label: 'U',
+                    handler(props) {
+                        handleSetMark(props.view, 'underline')
+                    },
+                    update(view, _, menuDom) {
+                        handleUpdateMenu(view, 'underline', menuDom)
+                    }
+                },
+                {
+                    label: 'X<sup>2</sup>',
+                    handler(props) {
+                        handleSetMark(props.view, 'sup')
+                    },
+                    update(view, _, menuDom) {
+                        handleUpdateMenu(view, 'sup', menuDom)
+                    }
+                },
+                {
+                    label: 'X<sub>2</sub>',
+                    handler(props) {
+                        handleSetMark(props.view, 'sub')
+                    },
+                    update(view, _, menuDom) {
+                        handleUpdateMenu(view, 'sub', menuDom)
+                    }
+                },
+                {
+                    label: 'C',
+                    handler(props) {
+                        handleSetMark(props.view, 'code')
+                    },
+                    update(view, _, menuDom) {
+                        handleUpdateMenu(view, 'code', menuDom)
+                    }
+                }
             ]
         }
     ]

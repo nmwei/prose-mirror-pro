@@ -43,7 +43,7 @@ export const schema = new Schema({
             parseDOM: [{ tag: "p" }]
         },
         heading: {
-            marks: "",
+            marks: "italic",
             attrs: {
                 level: { default: 1 }
             },
@@ -123,6 +123,7 @@ export const schema = new Schema({
         text: { group: "inline" }
     },
     marks: {
+        // 加粗 strong(语义化)
         bold: {
             toDOM: () => ["strong", 0],
             parseDOM: [
@@ -131,6 +132,7 @@ export const schema = new Schema({
                 { style: 'font-weight', getAttrs: (value) => /^(bold(er)?|[5-9]\d{2})$/.test(value as string) && null }
             ]
         },
+        // 斜体 em
         italic: {
             group: 'heading',
             toDOM: () => {
@@ -142,6 +144,7 @@ export const schema = new Schema({
                 { style: 'font-style=italic' },
             ]
         },
+        // 链接
         link: {
             group: 'heading',
             attrs: {
@@ -155,6 +158,58 @@ export const schema = new Schema({
             },
             parseDOM: [
                 { tag: 'a[href]:not([href *= "javascript:" i])' }
+            ]
+        },
+        // 删除线 s
+        strike: {
+            toDOM: () => {
+                return ['s', 0]
+            },
+            parseDOM: [
+                { tag: 's' },
+                { tag: 'del', getAttrs: (domNode) => (domNode as HTMLElement).style.textDecoration !== 'line-through' && null },
+                { style: 'text-decoration', getAttrs: (value) => value === 'line-through' && null }
+            ]
+        },
+        // 下划线 u
+        underline: {
+            toDOM: () => {
+                return ['u', 0]
+            },
+            parseDOM: [
+                { tag: 'u' },
+                { style: 'text-decoration', getAttrs: (value) => value === 'underline' && null }
+            ]
+        },
+        // 上标 sup
+        sup: {
+            spanning: false,
+            excludes: '_',
+            toDOM: () => {
+                return ['sup', 0]
+            },
+            parseDOM: [
+                { tag: 'sup' },
+            ]
+        },
+        // 下标 sub
+        sub: {
+            spanning: false,
+            excludes: '_',
+            toDOM: () => {
+                return ['sub', 0]
+            },
+            parseDOM: [
+                { tag: 'sub' },
+            ]
+        },
+        // 行内代码 code
+        code: {
+            toDOM: () => {
+                return ['code', { class: 'inline-code' }, 0]
+            },
+            parseDOM: [
+                { tag: 'code[inline-code]' },
             ]
         },
     }

@@ -2,15 +2,6 @@ import {EditorView} from "prosemirror-view";
 import {Attrs, MarkType, Schema} from "prosemirror-model";
 import { TextSelection } from "prosemirror-state";
 
-export function setBold(view: EditorView) {
-    const mark = view.state.schema.marks.bold;
-    return setMark(view, mark);
-}
-export function unsetBold(view: EditorView) {
-    const mark = view.state.schema.marks.bold;
-    return unsetMark(view, mark);
-}
-
 // 判断当前 selection 是否是 文本选区
 function isTextSelection(selection: unknown) {
     return selection instanceof TextSelection;
@@ -81,16 +72,12 @@ export function isMarkActive(view: EditorView, markType: MarkType | string) {
     return isActive;
 }
 
-function toggleMark(view: EditorView, markType: MarkType | string) {
+export function toggleMark(view: EditorView, markType: MarkType | string) {
     if(isMarkActive(view, markType)) {
         return unsetMark(view, markType);
     } else {
         return setMark(view, markType);
     }
-}
-
-export function toggleBold(view: EditorView) {
-    return toggleMark(view, 'bold');
 }
 
 function setMark(view: EditorView, markType: MarkType | string, attrs: Attrs | null = null) {
