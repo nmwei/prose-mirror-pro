@@ -1,14 +1,14 @@
 import crel from 'crelt';
 import { EditorView } from "prosemirror-view";
 import { MenuGroup, MenuGroupSpec } from "./menu-group";
-import { EditorState } from 'prosemirror-state';
+import {EditorState, PluginView} from 'prosemirror-state';
 
 export interface ToolbarSpec {
     groups: MenuGroupSpec[]
     class?: string
 }
 
-export class Toolbar {
+export class Toolbar implements PluginView {
     constructor(private view: EditorView, private spec: ToolbarSpec) {
         // 定义一个 toolbar dom
         const toolbarDom = crel('div', { spec: this.spec.class })
@@ -43,10 +43,18 @@ export class Toolbar {
 
     dom: HTMLElement;
     // 定义 update,主要用来批量更新 MenuGroup 中的 update
-    update(view: EditorView, state: EditorState) {
+    update(view: EditorView, prevState: EditorState) {
         this.view = view;
+        // 如果 update 时，当前 toolbar 不在页面上了，就重新生成并挂载，因为有可能传入的 state 中 plugins 有变化，此时会调用 destroy，将 toolbar 移除，这里得加回来
+        if(!this.dom.parentNode) {
+            this.render();
+        }
         this.groups.forEach(group => {
-            group.update(this.view, state);
+            group.update(this.view, prevState);
         })
+    }
+
+    destroy() {
+        this.dom.remove();
     }
 }

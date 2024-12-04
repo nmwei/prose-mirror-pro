@@ -1,6 +1,6 @@
 // view.ts
 import { EditorView } from 'prosemirror-view'
-import { EditorState } from 'prosemirror-state'
+import {EditorState, Plugin, PluginKey} from 'prosemirror-state'
 import { schema } from './schema';
 import { keymap } from 'prosemirror-keymap'
 // baseKeymap 定义了对于很多基础按键按下后的功能，例如回车换行，删除键等。
@@ -27,6 +27,110 @@ const state = EditorState.create({
             "Mod-y": redo,
             "Mod-b": toggleBoldCmd,
         }),
+        new Plugin({
+            key: new PluginKey("toolbar"),
+            view: (view) => new Toolbar(view, {
+                groups: [
+                    {
+                        name: '段落',
+                        menus: [
+                            {
+                                label: '添加段落',
+                                handler: (props) => {
+                                    insertParagraph(props.view, '这是段落')
+                                },
+                            },
+                            {
+                                label: '添加一级标题',
+                                handler: (props) => {
+                                    insertHeading(props.view, '这是标题')
+                                },
+                            },
+                            {
+                                label: '添加 blockquote',
+                                handler: (props) => {
+                                    insertBlockquote(props.view, '这是引用')
+                                },
+                            },
+                            {
+                                label: '添加 datetime',
+                                handler: (props) => {
+                                    insertDatetime(props.view, Date.now())
+                                },
+                            }
+                        ]
+                    },
+                    {
+                        name: '格式',
+                        menus: [
+                            {
+                                label: 'B',
+                                handler(props) {
+                                    handleSetMark(props.view, 'bold')
+                                },
+                                update(view, _, menDom) {
+                                    handleUpdateMenu(view, 'bold', menDom)
+                                }
+                            },
+                            {
+                                label: 'I',
+                                handler(props) {
+                                    handleSetMark(props.view, 'italic')
+                                },
+                                update(view, _, menuDom) {
+                                    handleUpdateMenu(view, 'italic', menuDom)
+                                }
+                            },
+                            {
+                                label: 'S',
+                                handler(props) {
+                                    handleSetMark(props.view, 'strike')
+                                },
+                                update(view, _, menuDom) {
+                                    handleUpdateMenu(view, 'strike', menuDom)
+                                }
+                            },
+                            {
+                                label: 'U',
+                                handler(props) {
+                                    handleSetMark(props.view, 'underline')
+                                },
+                                update(view, _, menuDom) {
+                                    handleUpdateMenu(view, 'underline', menuDom)
+                                }
+                            },
+                            {
+                                label: 'X<sup>2</sup>',
+                                handler(props) {
+                                    handleSetMark(props.view, 'sup')
+                                },
+                                update(view, _, menuDom) {
+                                    handleUpdateMenu(view, 'sup', menuDom)
+                                }
+                            },
+                            {
+                                label: 'X<sub>2</sub>',
+                                handler(props) {
+                                    handleSetMark(props.view, 'sub')
+                                },
+                                update(view, _, menuDom) {
+                                    handleUpdateMenu(view, 'sub', menuDom)
+                                }
+                            },
+                            {
+                                label: 'C',
+                                handler(props) {
+                                    handleSetMark(props.view, 'code')
+                                },
+                                update(view, _, menuDom) {
+                                    handleUpdateMenu(view, 'code', menuDom)
+                                }
+                            }
+                        ]
+                    }
+                ]
+            })
+        })
     ]
 })
 
@@ -35,7 +139,7 @@ const editorView = new EditorView(document.querySelector("#editor"), {
     dispatchTransaction(tr) {
         const newState = editorView.state.apply(tr);
         editorView.updateState(newState);
-        toolbar.update(editorView, editorView.state);
+        // toolbar.update(editorView, editorView.state);
     }
 })
 
@@ -65,108 +169,6 @@ function handleSetMark(view: EditorView, type: string) {
 
 // @ts-ignore
 window.editorView = editorView;
-
-const toolbar = new Toolbar(editorView, {
-    groups: [
-        {
-            name: '段落',
-            menus: [
-                {
-                    label: '添加段落',
-                    handler: (props) => {
-                        insertParagraph(props.view, '这是段落')
-                    },
-                },
-                {
-                    label: '添加一级标题',
-                    handler: (props) => {
-                        insertHeading(props.view, '这是标题')
-                    },
-                },
-                {
-                    label: '添加 blockquote',
-                    handler: (props) => {
-                        insertBlockquote(props.view, '这是引用')
-                    },
-                },
-                {
-                    label: '添加 datetime',
-                    handler: (props) => {
-                        insertDatetime(props.view, Date.now())
-                    },
-                }
-            ]
-        },
-        {
-            name: '格式',
-            menus: [
-                {
-                    label: 'B',
-                    handler(props) {
-                       handleSetMark(props.view, 'bold')
-                    },
-                    update(view, _, menDom) {
-                        handleUpdateMenu(view, 'bold', menDom)
-                    }
-                },
-                {
-                    label: 'I',
-                    handler(props) {
-                        handleSetMark(props.view, 'italic')
-                    },
-                    update(view, _, menuDom) {
-                        handleUpdateMenu(view, 'italic', menuDom)
-                    }
-                },
-                {
-                    label: 'S',
-                    handler(props) {
-                        handleSetMark(props.view, 'strike')
-                    },
-                    update(view, _, menuDom) {
-                        handleUpdateMenu(view, 'strike', menuDom)
-                    }
-                },
-                {
-                    label: 'U',
-                    handler(props) {
-                        handleSetMark(props.view, 'underline')
-                    },
-                    update(view, _, menuDom) {
-                        handleUpdateMenu(view, 'underline', menuDom)
-                    }
-                },
-                {
-                    label: 'X<sup>2</sup>',
-                    handler(props) {
-                        handleSetMark(props.view, 'sup')
-                    },
-                    update(view, _, menuDom) {
-                        handleUpdateMenu(view, 'sup', menuDom)
-                    }
-                },
-                {
-                    label: 'X<sub>2</sub>',
-                    handler(props) {
-                        handleSetMark(props.view, 'sub')
-                    },
-                    update(view, _, menuDom) {
-                        handleUpdateMenu(view, 'sub', menuDom)
-                    }
-                },
-                {
-                    label: 'C',
-                    handler(props) {
-                        handleSetMark(props.view, 'code')
-                    },
-                    update(view, _, menuDom) {
-                        handleUpdateMenu(view, 'code', menuDom)
-                    }
-                }
-            ]
-        }
-    ]
-})
 
 
 
