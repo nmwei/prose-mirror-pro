@@ -6,7 +6,7 @@ export const schema = new Schema({
             content: "title+"
         },
         block_title: {
-            content: "block+",
+            content: "block",
             group: "title",
             inline: false,
             //toDOM: () => ["div", { "class": "block_title" }, 0]
@@ -22,6 +22,12 @@ export const schema = new Schema({
                 { tag: 'div.block_title' },
             ]
         },
+        paragraph: {
+            group: "block",
+            content: "inline*",
+            toDOM: () => ["p", 0],
+            parseDOM: [{ tag: "p" }]
+        },
         blockquote: {
             content: 'paragraph+',
             group: 'block',
@@ -35,12 +41,6 @@ export const schema = new Schema({
             parseDOM: [
                 { tag: 'blockquote' }
             ]
-        },
-        paragraph: {
-            group: "block",
-            content: "inline*",
-            toDOM: () => ["p", 0],
-            parseDOM: [{ tag: "p" }]
         },
         heading: {
             marks: "italic",
