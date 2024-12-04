@@ -1,5 +1,6 @@
 import { EditorView } from "prosemirror-view";
 import { schema } from "./schema";
+import {Command} from "prosemirror-state";
 
 
 type Schema = typeof schema;
@@ -19,6 +20,19 @@ export function insertParagraph(editorView: EditorView, content: string) {
 
     // 派发更新
     dispatch(tr);
+}
+
+export const insertParagraphCommand: Command = (state, dispatch) => {
+    const { tr, schema } = state;
+    const { block_title, paragraph } = schema.nodes;
+    const newLine = block_title.create({}, paragraph.create());
+    if(dispatch) {
+        tr.replaceSelectionWith(newLine)
+        tr.scrollIntoView() //插入后如果不在可视区，滚动到可视区
+        dispatch(tr);
+        return true;
+    }
+    return false;
 }
 
 export function insertHeading(editorView: EditorView, content: string, level = 1) {
