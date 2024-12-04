@@ -1,6 +1,6 @@
 import {EditorView} from "prosemirror-view";
 import {Attrs, MarkType, Schema} from "prosemirror-model";
-import { TextSelection } from "prosemirror-state";
+import {Command, TextSelection} from "prosemirror-state";
 
 // 判断当前 selection 是否是 文本选区
 function isTextSelection(selection: unknown) {
@@ -116,6 +116,13 @@ function unsetMark(view: EditorView, markType: MarkType | string) {
     view.dispatch(tr);
 
     return true;
+}
+
+export const  toggleBoldCmd: Command = (state, dispatch, view) => {
+    if(view) {
+        return toggleMark(view, 'bold')
+    }
+    return false
 }
 
 

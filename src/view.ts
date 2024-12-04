@@ -9,7 +9,7 @@ import { baseKeymap } from 'prosemirror-commands'
 import { history, undo, redo } from 'prosemirror-history'
 import {insertParagraph, insertHeading, insertBlockquote, insertDatetime, insertParagraphCommand} from './utils'
 import { Toolbar } from './menu/toolbar'
-import {canSetMark, isMarkActive, toggleMark} from "./setMark";
+import { canSetMark, isMarkActive, toggleBoldCmd, toggleMark } from "./setMark";
 
 const state = EditorState.create({
     schema,
@@ -17,12 +17,16 @@ const state = EditorState.create({
         // 将基础按键绑定到对应的功能上，例如回车换行，删除键等。
         keymap({
             ...baseKeymap,
-            Enter: insertParagraphCommand
+            Enter: insertParagraphCommand,
         }),
         // 提供输入历史栈功能
         history(),
         // 将组合按键 ctrl/cmd + z, ctrl/cmd + y 分别绑定到 undo, redo 功能上
-        keymap({"Mod-z": undo, "Mod-y": redo}),
+        keymap({
+            "Mod-z": undo,
+            "Mod-y": redo,
+            "Mod-b": toggleBoldCmd,
+        }),
     ]
 })
 
