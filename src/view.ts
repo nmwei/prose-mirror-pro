@@ -10,6 +10,7 @@ import { history, undo, redo } from 'prosemirror-history'
 import {insertParagraph, insertHeading, insertBlockquote, insertDatetime, insertParagraphCommand} from './utils'
 import { Toolbar } from './menu/toolbar'
 import { canSetMark, isMarkActive, toggleBoldCmd, toggleMark } from "./setMark";
+import {docChangedTimePlugin} from "./plugins/doc-changed-time";
 
 const state = EditorState.create({
     schema,
@@ -130,7 +131,8 @@ const state = EditorState.create({
                     }
                 ]
             })
-        })
+        }),
+        docChangedTimePlugin(),
     ]
 })
 

@@ -1,6 +1,5 @@
 #editor {
   border: 1px solid #646cffaa;
-  min-height: 300px;
   padding: 10px;
 }
 
@@ -17,7 +16,8 @@
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border-width: 1px;
+  border-style: solid;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -83,4 +83,14 @@ button:focus-visible {
   width: 4px;
   border-radius: 2px;
   background-color: #e2e6ed;
+}
+
+.editor-footer {
+  font-size: 12px;
+  text-align: right;
+  background-color: #646cff33;
+  border-radius: 2px;
+  line-height: 2;
+  padding: 0 8px;
+  margin: 6px -12px -6px;
 }
