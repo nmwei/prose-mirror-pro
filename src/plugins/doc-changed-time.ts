@@ -5,7 +5,7 @@ const DOC_CHANGED_TIMES_KEY = new PluginKey('doc-changed-times')
 export const docChangedTimePlugin = (options?: {
     onlyContentChanged?: boolean,
 }) => {
-    const { onlyContentChanged } = options || {};
+    const { onlyContentChanged = true } = options || {};
     return new Plugin({
         key: DOC_CHANGED_TIMES_KEY,
         state: {
