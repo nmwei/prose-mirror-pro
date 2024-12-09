@@ -14,7 +14,7 @@ export const docChangedTimePlugin = (options?: {
             },
             apply: (tr, value, oldState, newState) => {
                const editorView = newState.schema.cached.view;
-               console.log('plugin state docChanged: ' + tr.docChanged);
+               //console.log('plugin state docChanged: ' + tr.docChanged);
                if((onlyContentChanged && !tr.docChanged) || editorView?.composing) {
                    return value;
                }
@@ -54,7 +54,7 @@ class DocChangedTime implements PluginView {
     }
 
     private updateTimesView(state: EditorState) {
-        console.log('plugin view update docChanged: ' + state.tr.docChanged);
+        //console.log('plugin view update docChanged: ' + state.tr.docChanged);
         this.recordChangedTimsDom.innerText = `文档被修改了 ${DOC_CHANGED_TIMES_KEY.getState(state).times}`
     }
 

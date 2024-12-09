@@ -12,10 +12,12 @@ import { Toolbar } from './menu/toolbar'
 import { canSetMark, isMarkActive, toggleBoldCmd, toggleMark } from "./setMark";
 import {docChangedTimePlugin} from "./plugins/doc-changed-time";
 import {codeBlockViewConstructor, createCodeBlockCmd} from "./code/codeblock";
+import {highlightCodePlugin} from "./plugins/code_highlight/core";
 
 const state = EditorState.create({
     schema,
     plugins: [
+        highlightCodePlugin(),
         // 将基础按键绑定到对应的功能上，例如回车换行，删除键等。
         keymap({
             ...baseKeymap,
