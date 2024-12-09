@@ -11,7 +11,7 @@ import {insertParagraph, insertHeading, insertBlockquote, insertDatetime, insert
 import { Toolbar } from './menu/toolbar'
 import { canSetMark, isMarkActive, toggleBoldCmd, toggleMark } from "./setMark";
 import {docChangedTimePlugin} from "./plugins/doc-changed-time";
-import {createCodeBlockCmd} from "./code/codeblock";
+import {codeBlockViewConstructor, createCodeBlockCmd} from "./code/codeblock";
 
 const state = EditorState.create({
     schema,
@@ -149,6 +149,9 @@ const state = EditorState.create({
 
 const editorView = new EditorView(document.querySelector("#editor"), {
     state,
+    nodeViews: {
+        code_block: codeBlockViewConstructor,
+    },
     dispatchTransaction(tr) {
         const newState = editorView.state.apply(tr);
         editorView.updateState(newState);
