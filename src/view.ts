@@ -11,6 +11,7 @@ import {insertParagraph, insertHeading, insertBlockquote, insertDatetime, insert
 import { Toolbar } from './menu/toolbar'
 import { canSetMark, isMarkActive, toggleBoldCmd, toggleMark } from "./setMark";
 import {docChangedTimePlugin} from "./plugins/doc-changed-time";
+import {createCodeBlockCmd} from "./code/codeblock";
 
 const state = EditorState.create({
     schema,
@@ -125,6 +126,16 @@ const state = EditorState.create({
                                 },
                                 update(view, _, menuDom) {
                                     handleUpdateMenu(view, 'code', menuDom)
+                                }
+                            },
+                            {
+                                label: "添加代码块",
+                                handler(props) {
+                                    const { state, dispatch, view } = props;
+                                    createCodeBlockCmd(state, dispatch, view)
+                                    setTimeout(() => {
+                                        view.focus();
+                                    })
                                 }
                             }
                         ]

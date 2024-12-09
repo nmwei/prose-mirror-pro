@@ -1,4 +1,5 @@
 import { Schema } from "prosemirror-model"
+import {codeBlock} from "./code/codeblock";
 
 export const schema = new Schema({
     nodes: {
@@ -120,7 +121,9 @@ export const schema = new Schema({
                 }
             ]
         },
-        text: { group: "inline" }
+        text: { group: "inline" },
+        code_block: codeBlock,
+
     },
     marks: {
         // 加粗 strong(语义化)
